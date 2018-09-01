@@ -40,6 +40,8 @@
 #include <libapicore/httpServer.h>
 #endif
 
+#include <libwatchdog/watchdog.h>
+
 using namespace std;
 using namespace dev;
 using namespace dev::eth;
@@ -852,6 +854,9 @@ private:
             exit(1);
         }
 
+        WatchDog wd;
+        wd.start();
+
         // sealers, m_minerType
         Farm f(m_io_service, m_show_hwmonitors, m_show_power);
         f.setSealers(sealers);
@@ -928,6 +933,8 @@ private:
 
         mgr.stop();
         stop_io_service();
+
+        wd.stop();
 
         cnote << "Terminated!";
         exit(0);
